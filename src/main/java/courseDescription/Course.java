@@ -1,3 +1,5 @@
+package courseDescription;
+
 /**
  * Class containing information about the course
  */
