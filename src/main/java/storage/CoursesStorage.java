@@ -30,7 +30,8 @@ public class CoursesStorage {
         coursesPoool.forEach(course -> {
             System.out.println(course.getTitle()+ " " + "\n"+
                                "Цена: " + course.getPrice() + "р" + " " + "\n"+
-                               "Ссылка на курс: " + course.getUrl() + "\n");
+                               "Ссылка на курс: " + course.getUrl() + "\n" +
+                               "Количество курсов: " + getAmountCourses());
         });
     }
 }
