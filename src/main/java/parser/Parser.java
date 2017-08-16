@@ -6,9 +6,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import storage.CoursesStorage;
-
 import java.io.IOException;
-
 
 /**
  * Class for parsing courses
@@ -29,6 +27,7 @@ public class Parser {
 
     public void parsing() throws IOException {
         String dirWithCourses = "kursyi/";
+
         Document pageWithCourses = getPage(url + dirWithCourses);
         Elements liTags = pageWithCourses.
                             getElementsByAttributeValue("class","courses-list--item" +
@@ -54,7 +53,7 @@ public class Parser {
         coursesStorage.printAllCourses();
     }
 
-    public String getTagValueWithoutSpaces(Elements tag){
+    private String getTagValueWithoutSpaces(Elements tag){
         String tagValue = tag.text();
         return tagValue.replace(" ", "");
     }
@@ -65,11 +64,6 @@ public class Parser {
         Elements divTags = pageWithCurrentCourse.select(cssQueryPrice);
         int price = Integer.parseInt(getTagValueWithoutSpaces(divTags));
         return price;
-    }
-
-    public static void main(String[] args) throws IOException {
-        Parser parser = new Parser();
-        parser.parsing();
     }
 }
 
