@@ -1,7 +1,13 @@
-package PACKAGE_NAME;
+import parser.Parser;
+
+import java.io.IOException;
 
 /**
- * Created by gerit on 16.08.2017.
+ *Class allows you to run the parser
  */
 public class LaunchParser {
+    public static void main(String[] args) throws IOException {
+        Parser parser = new Parser();
+        parser.parsing();
+    }
 }
