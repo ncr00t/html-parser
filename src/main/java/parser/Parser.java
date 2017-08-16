@@ -22,14 +22,14 @@ public class Parser {
         coursesStorage = new CoursesStorage();
     }
 
-    private Document getPageWithCourses() throws IOException {
+    private Document getPage(String url) throws IOException {
         return Jsoup.connect(url).
                      validateTLSCertificates(false).
                      get();
     }
 
     public void parsing() throws IOException {
-        Document pageWithCourses = getPageWithCourses();
+        Document pageWithCourses = getPage(url);
         Elements liTags = pageWithCourses.
                             getElementsByAttributeValue("class","courses-list--item" +
                                                          " _hparent ms2_product");
@@ -38,11 +38,28 @@ public class Parser {
             Element aTag = liTag.child(0);
             String urlOnCourse = aTag.attr("href");
 
-            Course course = new Course();
-            course.setUrl(urlOnCourse);
-            coursesStorage.addCourse(course);
+            Element imgTag = aTag.child(0);
+            String courseTitle = imgTag.attr("alt");
+
+            try {
+                Document pageWithCurrentCourse = getPage("http://ntschool.ru/" + urlOnCourse);
+                Elements divTags = pageWithCurrentCourse.select("div.course1-ticket1--box-newPrice");
+                int price = Integer.parseInt(getTagValueWithoutSpaces(divTags));
+                Course course = new Course();
+                course.setTitle(courseTitle);
+                course.setUrl(urlOnCourse);
+                course.setPrice(price);
+                coursesStorage.addCourse(course);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
         coursesStorage.printAllCourses();
+    }
+
+    public String getTagValueWithoutSpaces(Elements tag){
+        String tagValue = tag.text();
+        return tagValue.replace(" ", "");
     }
 }
 
