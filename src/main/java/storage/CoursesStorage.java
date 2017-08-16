@@ -27,11 +27,10 @@ public class CoursesStorage {
     }
 
     public void printAllCourses(){
-        StringBuilder stringBuilder = new StringBuilder();
         coursesPoool.forEach(course -> {
-            stringBuilder.append(course.getTitle().concat(" "))
-                         .append(course.getPrice() + "р" + " ")
-                         .append(course.getUrl());
+            System.out.println(course.getTitle()+ " " + "\n"+
+                               "Цена: " + course.getPrice() + "р" + " " + "\n"+
+                               "Ссылка на курс: " + course.getUrl() + "\n");
         });
     }
 }
