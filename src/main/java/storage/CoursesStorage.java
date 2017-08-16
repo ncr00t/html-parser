@@ -18,7 +18,17 @@ public class CoursesStorage {
         coursesPoool.add(course);
     }
 
+    public List<Course> getCoursesPoool() {
+        return coursesPoool;
+    }
+
     public int getAmountCourses(){
        return coursesPoool.size();
+    }
+
+    public void printAllCourses(){
+        coursesPoool.forEach(course -> {
+            System.out.println(course.getUrl());
+        });
     }
 }
