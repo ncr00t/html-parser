@@ -14,11 +14,10 @@ import java.io.IOException;
  * Class for parsing courses
  */
 public class Parser {
-    private String url;
+    private final String url = "http://ntschool.ru/";
     private CoursesStorage coursesStorage;
 
-    public Parser(String url) {
-        this.url = url;
+    public Parser() {
         coursesStorage = new CoursesStorage();
     }
 
@@ -29,30 +28,28 @@ public class Parser {
     }
 
     public void parsing() throws IOException {
-        Document pageWithCourses = getPage(url);
+        String dirWithCourses = "kursyi/";
+        Document pageWithCourses = getPage(url + dirWithCourses);
         Elements liTags = pageWithCourses.
                             getElementsByAttributeValue("class","courses-list--item" +
                                                          " _hparent ms2_product");
 
         liTags.forEach(liTag -> {
             Element aTag = liTag.child(0);
-            String urlOnCourse = aTag.attr("href");
+            String urlOnCurrentCourse = aTag.attr("href");
 
             Element imgTag = aTag.child(0);
             String courseTitle = imgTag.attr("alt");
-
+            Course course = new Course();
+            course.setTitle(courseTitle);
+            course.setUrl(urlOnCurrentCourse);
             try {
-                Document pageWithCurrentCourse = getPage("http://ntschool.ru/" + urlOnCourse);
-                Elements divTags = pageWithCurrentCourse.select("div.course1-ticket1--box-newPrice");
-                int price = Integer.parseInt(getTagValueWithoutSpaces(divTags));
-                Course course = new Course();
-                course.setTitle(courseTitle);
-                course.setUrl(urlOnCourse);
-                course.setPrice(price);
-                coursesStorage.addCourse(course);
+                course.setPrice(getPriceForCourse(urlOnCurrentCourse));
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            coursesStorage.addCourse(course);
         });
         coursesStorage.printAllCourses();
     }
@@ -60,6 +57,19 @@ public class Parser {
     public String getTagValueWithoutSpaces(Elements tag){
         String tagValue = tag.text();
         return tagValue.replace(" ", "");
+    }
+
+    private int getPriceForCourse(String urlOnCurrentCourse) throws IOException {
+        Document pageWithCurrentCourse = getPage( url + urlOnCurrentCourse);
+        String cssQueryPrice = "div.course1-ticket1--box-newPrice";
+        Elements divTags = pageWithCurrentCourse.select(cssQueryPrice);
+        int price = Integer.parseInt(getTagValueWithoutSpaces(divTags));
+        return price;
+    }
+
+    public static void main(String[] args) throws IOException {
+        Parser parser = new Parser();
+        parser.parsing();
     }
 }
 
