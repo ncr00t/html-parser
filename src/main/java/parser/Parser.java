@@ -47,10 +47,10 @@ public class Parser {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             coursesStorage.addCourse(course);
         });
         coursesStorage.printAllCourses();
+        System.out.println( "Количество курсов: " + coursesStorage.getAmountCourses());
     }
 
     private String getTagValueWithoutSpaces(Elements tag){
